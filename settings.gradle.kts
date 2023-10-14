@@ -5,7 +5,7 @@ pluginManagement {
     }
 }
 
-rootProject.name = "MinecraftBaseLibrary"
+rootProject.name = "MinecraftBaseLibraries"
 include("commandlib")
 include("configlib")
 include("pluginlib")

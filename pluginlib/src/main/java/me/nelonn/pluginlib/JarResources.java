@@ -15,8 +15,8 @@ import java.util.zip.ZipInputStream;
 
 public final class JarResources {
 
-    public static void extractDirectory(@NotNull Object source, @NotNull String input, @NotNull File output) {
-        extractFile(source.getClass(), input, output);
+    public static void extractDirectory(@NotNull Object source, @NotNull String from, @NotNull File to) {
+        extractDirectory(source.getClass(), from, to);
     }
 
     /**
@@ -24,7 +24,7 @@ public final class JarResources {
      *
      * @param source the class from which to take jar
      * @param from   directory in jar, example: "example/"
-     * @param to     output file
+     * @param to     output directory
      */
     public static void extractDirectory(@NotNull Class<?> source, @NotNull String from, @NotNull File to) {
         from = from.replaceAll("\\\\", "/");
