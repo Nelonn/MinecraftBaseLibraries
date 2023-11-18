@@ -89,7 +89,7 @@ public final class JarResources {
             throw new IllegalArgumentException("Directories cannot be extracted as file");
         }
         try (ZipFile zf = new ZipFile(source.toFile())) {
-            ZipEntry entry = zf.getEntry("coprolite.plugin.json");
+            ZipEntry entry = zf.getEntry(input);
             if (entry == null) {
                 throw new IllegalArgumentException("The embedded resource '" + input + "' cannot be found in jar");
             }
