@@ -9,8 +9,10 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.jar.JarInputStream;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
 public final class JarResources {
@@ -73,25 +75,45 @@ public final class JarResources {
             }
             URLConnection connection = url.openConnection();
             connection.setUseCaches(false);
-            try (InputStream in = connection.getInputStream()) {
-                if (in == null) {
-                    throw new IllegalArgumentException("The embedded resource '" + input + "' cannot be found in jar");
-                }
-                try {
-                    if (output.exists()) return;
-                    try (OutputStream out = Files.newOutputStream(output.toPath())) {
-                        byte[] buffer = new byte[1024];
-                        int bytes;
-                        while ((bytes = in.read(buffer)) > 0) {
-                            out.write(buffer, 0, bytes);
-                        }
-                    }
-                } catch (IOException e) {
-                    //LOGGER.error("Could not save " + outFile.getName() + " to " + outFile, e);
-                }
+            try (InputStream is = connection.getInputStream()) {
+                extractFile(is, output);
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public static void extractFile(@NotNull Path source, @NotNull String input, @NotNull File output) {
+        input = input.replaceAll("\\\\", "/");
+        if (input.endsWith("/")) {
+            throw new IllegalArgumentException("Directories cannot be extracted as file");
+        }
+        try (ZipFile zf = new ZipFile(source.toFile())) {
+            ZipEntry entry = zf.getEntry("coprolite.plugin.json");
+            if (entry == null) {
+                throw new IllegalArgumentException("The embedded resource '" + input + "' cannot be found in jar");
+            }
+            try (InputStream is = zf.getInputStream(entry)) {
+                extractFile(is, output);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void extractFile(@NotNull InputStream in, @NotNull File output) {
+        try {
+            if (output.exists()) return;
+            try (OutputStream out = Files.newOutputStream(output.toPath())) {
+                byte[] buffer = new byte[1024];
+                int bytes;
+                while ((bytes = in.read(buffer)) > 0) {
+                    out.write(buffer, 0, bytes);
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Could not save " + output.getName(), e);
+            //LOGGER.error("Could not save " + outFile.getName(), e);
         }
     }
 
