@@ -9,7 +9,7 @@ public final class RussianKeyboard {
     public static @NotNull String ruToEn(@NotNull String input) {
         char[] output = input.toCharArray();
         for (int i = 0; i < output.length; i++) {
-            Character replace = MAPPING.get(output[i]);
+            Character replace = MAPPING.inverse().get(output[i]);
             if (replace == null) continue;
             output[i] = replace;
         }
