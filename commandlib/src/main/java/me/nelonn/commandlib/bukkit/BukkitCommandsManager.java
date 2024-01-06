@@ -79,7 +79,7 @@ public class BukkitCommandsManager {
                 if (subArguments.length > 0) {
                     System.arraycopy(arguments, 1, subArguments, 0, subArguments.length);
                 }
-                return commandAction(childCommand, action, failResult, requireMinimumTwoArguments, source, input, subArguments);
+                return commandAction(childCommand, action, failResult, requireMinimumTwoArguments, source, input + " " + alias, subArguments);
             }
         }
         return action.action(command, new CommandContext<>(source, input, command, List.of(arguments)));
