@@ -1,6 +1,5 @@
 package me.nelonn.commandlib;
 
-import com.google.errorprone.annotations.ForOverride;
 import me.nelonn.commandlib.suggestion.Suggestions;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -53,7 +52,6 @@ public abstract class Command<S> {
 
     public abstract boolean run(@NotNull CommandContext<S> context);
 
-    @ForOverride
     public @Nullable List<String> suggest(@NotNull CommandContext<S> context) {
         return Suggestions.EMPTY;
     }
